@@ -190,7 +190,7 @@ function activerBoutonAvecEntree(event) {
     if (event.keyCode === 13) {
         checkWeather(searchBox.value);
         if(inputBox.value === 'mimmo papa'||inputBox.value === 'mimmo papa '){
-            alert("Gracie papa")
+            alert("Grazie papa")
             searchBox.value = ''
         }
     }
@@ -202,7 +202,7 @@ document.addEventListener("keydown", activerBoutonAvecEntree)
 searchButton.addEventListener("click", ()=> {
     checkWeather(searchBox.value);
     if(inputBox.value === 'mimmo papa'||inputBox.value === 'mimmo papa '){
-        alert("Gracie papa")
+        alert("Grazie papa")
         searchBox.value = ''
     }
 

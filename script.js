@@ -188,22 +188,18 @@ async function checkWeather(city){
 }
 function activerBoutonAvecEntree(event) {
     if (event.keyCode === 13) {
-        checkWeather(searchBox.value);
-        if(inputBox.value === 'mimmo papa'||inputBox.value === 'mimmo papa '){
-            alert("Grazie papa")
-            searchBox.value = ''
+        while (inputBox.value.charAt(inputBox.value.length - 1) === ' ') {
+            inputBox.value = inputBox.value.slice(0, -1);
         }
+        checkWeather(searchBox.value);
     }
-    
 }
-
 document.addEventListener("keydown", activerBoutonAvecEntree)
 
-searchButton.addEventListener("click", ()=> {
-    checkWeather(searchBox.value);
-    if(inputBox.value === 'mimmo papa'||inputBox.value === 'mimmo papa '){
-        alert("Grazie papa")
-        searchBox.value = ''
-    }
 
+searchButton.addEventListener("click", ()=> {
+    while (inputBox.value.charAt(inputBox.value.length - 1) === ' ') {
+        inputBox.value = inputBox.value.slice(0, -1);
+    }
+    checkWeather(searchBox.value);
 })

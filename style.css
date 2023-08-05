@@ -1,181 +1,205 @@
-* {
-    margin: 0;
-    padding: 0;
-    font-family: 'Poppins', sans-serif;
-    box-sizing: border-box;
-    transition-duration: 0.9 ;
-    -webkit-user-select: none;
-    -webkit-touch-callout: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
+const apiKey = "43d3c70d667ffa4972a9a432bd4d0ac1";
+const apiUrl = "https://api.openweathermap.org/data/2.5/weather?&units=metric&q=";
+const searchBox = document.querySelector(".search input")
+const searchButton = document.querySelector(".search button")
+const weatherIcon = document.querySelector(".weather-icon");
+const bouton = document.getElementById('searchButton');
+const card = document.querySelector('.card');
+const timeEl = document.getElementById('time');
+const dateEl = document.getElementById('date');
+const inputBox = document.querySelector("input");
+const body = document.querySelector("body");
 
-body.normal{
-    background: rgb(31, 31, 31);
-}
-body.cloud{
-    background-color: #0f6176;
-}
-body.clear{
-    background-color: #a767228a;
-}
 
-.top{
-    display: flex;
+
+setInterval(() => {
+    const time = new Date();
+    const month = time.getMonth();
+    const date = time.getDate();
+    const day = time.getDay();
+    const hour = time.getHours();
+    const hoursIn12HrFormat = hour >= 13 ? hour %12: hour
+    const minutes = time.getMinutes();
+    const ampm = hour >= 12 ? 'PM' : 'AM'
+    let dayName;
+    let monthName;
+
+    if (day === 1){
+        dayName = 'Monday';
+    }else if(day === 2){
+        dayName = 'Tuesday';
+    }else if(day === 3){
+        dayName = 'Wednesday';
+    }else if(day === 4){
+        dayName = 'Thursday';
+    }else if(day === 5){
+        dayName = 'Friday';
+    }else if(day === 6){
+        dayName = 'Saturday';
+    }else if(day === 0){
+        dayName = 'Sunday';
+    }
+
+    if (month === 1){
+        monthName = 'January';
+    }else if(month === 2){
+        monthName = 'February';
+    }else if(month === 3){
+        monthName = 'March';
+    }else if(month === 4){
+        monthName = 'April';
+    }else if(month === 5){
+        monthName = 'May';
+    }else if(month === 6){
+        monthName = 'Jun';
+    }else if(month === 7){
+        monthName = 'July';
+    }else if(month === 3){
+        monthName = 'August';
+    }else if(month === 4){
+        monthName = 'September';
+    }else if(month === 5){
+        monthName = 'October';
+    }else if(month === 6){
+        monthName = 'November';
+    }else if(month === 7){
+        monthName = 'December';
+    }
+
+    timeEl.innerHTML =hoursIn12HrFormat + ':' + minutes + ' ' + `<span id="am-pm">${ampm}</span>`;
+    dateEl.innerHTML = dayName + ', ' + date + ' ' + monthName; 
+}, 1000);
+
+function gererEffetTactile(event) {
+
+    if (event.type === 'touchstart') {
+      bouton.classList.remove('hover');
+      bouton.classList.add('grise');
+    } else if (event.type === 'touchend') { 
+      bouton.classList.remove('grise'); 
+    }
+  }
+
+bouton.addEventListener('touchstart', gererEffetTactile);
+bouton.addEventListener('touchend', gererEffetTactile)
+
+
+async function checkWeather(city){
     
-}
-.time{
-    background-color: rgba(81, 92, 103, 0.5);
-    display: flex;
-    margin-bottom: 30px;
-    margin-left: 5px;
-    padding: 11px;
-    border-radius: 10px;
-    cursor: pointer; 
-}
-.time:hover{
-    transform: scale(1.09);
-}
-
-.time span{
-    margin-left: 5px;
-}
-.date{
-    background-color: rgba(81, 92, 103, 0.5);
-    display: flex;
-    margin-bottom: 30px;
-    margin-left: 25px;
-    padding: 11px;
-    border-radius: 10px;
-    cursor: pointer;
+    const response = await fetch(apiUrl + city + `&appid=${apiKey}`)
     
-}
-.date:hover{
-    transform: scale(1.09);
-}
-.card{
-    border: 5px solid #0000007f;
-    width: 300vw;
-    max-width: 460px;
-    background: linear-gradient(135deg, #5d9fbd, #b95a40);
-    color: #ffffff;
-    border-radius: 20px;
-    padding: 40px 35px;
-    text-align: center;
-    transform-origin: 0% 0% 0px;
-    margin: auto;
-    margin-top: 20vh;
+
+    if(response.status == 400){
+        body.classList.add('normal');
+        card.classList.remove('rain');
+        card.classList.remove('clear');
+        card.classList.remove('cloud');
+        body.classList.remove('cloud');
+        body.classList.remove('clear');
+        card.classList.add('.card');
+        weatherIcon.src = "weatherImages/default.png"
+        document.querySelector(".city").style.display = "none";
+        document.querySelector(".temp").innerHTML = "--";
+        document.querySelector(".humidity").innerHTML = "--";
+        document.querySelector(".wind").innerHTML = "--"; 
+
+    }
+
+    if(response.status == 404){
+        body.classList.add('normal');
+        card.classList.remove('rain');
+        card.classList.remove('clear');
+        card.classList.remove('cloud');
+        body.classList.remove('cloud');
+        body.classList.remove('clear');
+        card.classList.add('.card');
+        weatherIcon.src = "weatherImages/default.png"
+        document.querySelector(".error").style.display = "block"
+        document.querySelector(".city").style.display = "none";
+        document.querySelector(".temp").innerHTML = "--";
+        document.querySelector(".humidity").innerHTML = "--";
+        document.querySelector(".wind").innerHTML = "--";    
+    }else{
+        document.querySelector(".error").style.display = "none"
+        var data = await response.json();
+
+    document.querySelector(".city").innerHTML = data.name;
+    document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°C";
+    document.querySelector(".humidity").innerHTML =Math.round(data.main.humidity) + "%";
+    document.querySelector(".wind").innerHTML =  Math.round(data.wind.speed) + " km/h";
     
-}
-.card.cloud {
-    background: linear-gradient(135deg, #879a9e, #2596b2);
-}
-.card.clear {
-    background: linear-gradient(135deg, #c0ae6c, #b16501);
-}
-.card.rain {
-    background: linear-gradient(135deg, #515c67, #4b7fe09e);
-}
+
+    if(data.weather[0].main == "Clouds"){
+        weatherIcon.src = "weatherImages/clouds.png"
+        card.classList.remove('.card');
+        card.classList.remove('rain');
+        card.classList.remove('clear');
+        body.classList.remove('normal');
+        body.classList.remove('clear');
+        card.classList.add('cloud');
+        body.classList.add('cloud');
 
 
-.search{
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
+    }
+    else if(data.weather[0].main == "Clear"){
+        weatherIcon.src = "weatherImages/clear.png"
+        card.classList.remove('rain');
+        card.classList.remove('cloud');
+        card.classList.remove('.card');
+        body.classList.remove('cloud');
+        card.classList.add('clear');
+        body.classList.add('clear');
+    }
+    else if(data.weather[0].main == "Rain"){
+        weatherIcon.src = "weatherImages/rain.png"
+        card.classList.remove('.card');
+        card.classList.remove('clear');
+        card.classList.remove('cloud');
+        body.classList.remove('normal');
+        body.classList.remove('clear');
+        card.classList.add('rain');
+        body.classList.add('cloud');
+    }
+    else if(data.weather[0].main == "Drizzle"){
+        weatherIcon.src = "weatherImages/drizzle.png"
+        card.classList.remove('.card');
+        card.classList.remove('clear');
+        card.classList.remove('cloud');
+        body.classList.remove('normal');
+        body.classList.remove('clear');
+        card.classList.add('rain');
+        body.classList.add('cloud');
+    }
+    else if(data.weather[0].main == "Mist"){
+        weatherIcon.src = "weatherImages/mist.png"
+        card.classList.remove('.card');
+        card.classList.remove('clear');
+        card.classList.remove('cloud');
+        body.classList.remove('normal');
+        body.classList.remove('clear');
+        card.classList.add('rain');
+        body.classList.add('cloud');
+    }
 
-.search input{
-    border: 0;
-    outline: 0;
-    background: #e1e1e1;
-    padding: 10px 25px;
-    height: 60px;
-    border-radius:30px ;
-    font-size: 18px;
-}
 
-.search input::placeholder{
-    color: rgb(0, 0, 0);
-    opacity: 70%;
-}
-
-.search button{
-    border: 0;
-    outline: 0;
-    background: #e1e1e1;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    cursor: pointer;
-    
-    
-}
-
-.search button.grise {
-    background-color: #b5b5b5;
-}
-.search button.hover:hover{
-    background-color: #b5b5b5;
-}
-.search button img{
-    width: 20px;
-}
-.weather-icon{
-    width: 170px;
-    margin-top: 30px;
-}
-
-.weather h1{
-    font-size: 80px;
-    font-weight: 500;
-    margin-top: 10px;
-
-}
-.weather h2{
-    font-size: 45px;
-    font-weight: 400;
-    margin-top: 10px;
-}
-.details{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-    margin-top: 50px;
-}
-.col{
-    display: flex;
-    align-items: center;
-    text-align: left;
-    font-size:20px ;
-}
-.col img{
-    width: 50px;
-    margin-right: 10px;
-}
-.humidity, .wind {
-    font-size: 30px;
-    margin-top: -6px;
-
-}
-.error{
-    text-align: left;
-    margin-left: 10px;
-    font-size: 14px;
-    margin-top: 10px;
-    display: none;
-}
-.nom{
-    margin-bottom: 20px;
-    opacity: 70%;
-}
-@media only screen and (max-width: 600px) {
-
-    .card{
-        scale: 0.7;
     }
     
+    
 }
+function activerBoutonAvecEntree(event) {
+    if (event.keyCode === 13) {
+        while (inputBox.value.charAt(inputBox.value.length - 1) === ' ') {
+            inputBox.value = inputBox.value.slice(0, -1);
+        }
+        checkWeather(searchBox.value);
+    }
+}
+document.addEventListener("keydown", activerBoutonAvecEntree)
 
+
+searchButton.addEventListener("click", ()=> {
+    while (inputBox.value.charAt(inputBox.value.length - 1) === ' ') {
+        inputBox.value = inputBox.value.slice(0, -1);
+    }
+    checkWeather(searchBox.value);
+})

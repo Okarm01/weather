@@ -55,7 +55,6 @@ body.clear{
     transform: scale(1.09);
 }
 .card{
-    border: 5px solid #0000007f;
     width: 300vw;
     max-width: 460px;
     background: linear-gradient(135deg, #5d9fbd, #b95a40);
@@ -66,6 +65,10 @@ body.clear{
     transform-origin: 0% 0% 0px;
     margin: auto;
     margin-top: 20vh;
+    box-shadow: 45px 45px 45px -15px rgba(0, 0, 0, 0.15),
+    inset 10px 10px 10px rgba(255, 255, 255, 0.539),
+    -15px -15px 35px rgba(188, 188, 188, 0.646),
+    inset -2px -2px 15px rgba(0, 0, 0, 0.2);
     
 }
 .card.cloud {

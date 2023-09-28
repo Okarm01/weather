@@ -12,7 +12,7 @@
 }
 
 body.normal{
-    background: rgb(31, 31, 31);
+    background: rgb(135, 131, 131);
 }
 body.cloud{
     background-color: #0f6176;
@@ -20,7 +20,11 @@ body.cloud{
 body.clear{
     background-color: #a767228a;
 }
-
+.boite{
+    padding: 35px;
+    display: flex;
+    flex-direction: column;  
+}
 .top{
     display: flex;
     
@@ -66,10 +70,7 @@ body.clear{
     margin: auto;
     margin-top: 20vh;
     box-shadow: 45px 45px 45px -15px rgba(0, 0, 0, 0.15),
-    inset 10px 10px 10px rgba(255, 255, 255, 0.539),
-    -15px -15px 35px rgba(188, 188, 188, 0.646),
-    inset -2px -2px 15px rgba(0, 0, 0, 0.2);
-    
+    inset 10px 10px 10px rgba(255, 255, 255, 0.539);
 }
 .card.cloud {
     background: linear-gradient(135deg, #879a9e, #2596b2);
@@ -177,4 +178,3 @@ body.clear{
     }
     
   }
-
